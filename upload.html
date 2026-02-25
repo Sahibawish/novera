@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Upload Photo - Skin Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        @keyframes scanMove {
+            0% {
+                top: 15%;
+                opacity: .2
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            100% {
+                top: 85%;
+                opacity: .2
+            }
+        }
+
+        .animate-scan {
+            position: absolute;
+            animation: scanMove 2.4s linear infinite;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.35;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F2E6F1] text-gray-900">
+
+    <section class="min-h-screen py-12 m-8 rounded-2xl"
+        style="background-color: rgb(252, 245, 240); box-shadow: 0 8px 40px rgba(100,97,171,0.15);">
+
+        <div class="max-w-4xl mx-auto px-6">
+
+            <div class="mb-16">
+                <h1 class="text-[42px] text-[#6461ab] font-bold mb-4"
+                    style="font-family:'Cormorant Garamond',serif;">Snap a selfie</h1>
+                <p class="mb-10 text-[#000] text-[14px] lg:text-[16px] max-w-2xl"> 
+                    Just snap one selfie and we'll take it from there. We'll guide you through the process and then
+                    suggest products based on your scan and skin concerns.
+                </p>
+
+                <h2 class="text-[42px] text-[#6461ab] font-bold mb-4 mt-10"
+                    style="font-family:'Cormorant Garamond',serif; font-weight:600;">Or upload your own
+                </h2>
+                <p class="mb-10 text-[#000] text-[14px] lg:text-[16px] max-w-2xl">
+                    For the perfect pic, make sure it's well-lit, you're facing the camera, and nothing's blocking your
+                    face.
+                </p>
+
+                <div class="flex flex-col lg:flex-row justify-center gap-12 my-12">
+                    <div class="flex flex-col items-center">
+                        <img class="w-24 h-24" src="./face-smile.png" alt="">
+                        <div class="mt-2 text-sm text-center text-gray-600"><p>Good lighting — natural or bright indoor light works best</p></div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img class="w-24 h-24" src="./check.png" alt="">
+                        <div class="mt-2 text-sm text-center text-gray-600"><p>Face the camera directly, nothing blocking your face</p></div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img class="w-24 h-24" src="./eye.png" alt="">
+                        <div class="mt-2 text-sm text-center text-gray-600"><p>Remove glasses and keep hair away from your face</p></div>
+                    </div>
+                </div>
+
+                <p class="text-center my-12" style="color:#9B94C9;">
+                    We do not store any images uploaded or taken with our scan.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-12">
+                <button onclick="uploadPhoto()" class="px-4 py-3 rounded-3xl transition font-medium tracking-wide"
+                    style="border: 2px solid #000; color: #000; background: transparent;"
+                    onmouseover="this.style.background='rgba(100,97,171,0.08)'"
+                    onmouseout="this.style.background='transparent'">
+                    UPLOAD A PHOTO
+                </button>
+                <button onclick="takeSelfie()" class="bg-black text-white px-4 py-3 rounded-3xl font-base hover:scale-105 transition opacity-90"
+                    style="box-shadow: 0 6px 20px rgba(100,97,171,0.35);"
+                    onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                    TAKE SELFIE
+                </button>
+            </div>
+
+            <!-- Image Display Area -->
+            <div id="image-area" class="hidden mt-8 text-center p-6 rounded-2xl"
+                style="border: 2px dashed #b9b4e8; background: rgba(255,255,255,0.35);">
+                <h3 class="text-lg font-bold mb-4" style="color:#6461ab;">Uploaded Image</h3>
+                <img id="uploaded-image" class="w-full max-w-sm mx-auto rounded-xl shadow-md"
+                    style="border: 1px solid #b9b4e8;">
+                <button onclick="proceedWithImage()"
+                    class="mt-4 text-white px-6 py-3 rounded-3xl transition font-medium"
+                    style="background: linear-gradient(135deg, #8F8CD4, #6461ab); box-shadow: 0 6px 20px rgba(100,97,171,0.3);"
+                    onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                    Proceed to Scan
+                </button>
+            </div>
+
+            <!-- Back Button -->
+            <div class="mt-8 text-center">
+                <button onclick="goBack()" class="transition underline text-lg" style="color:#9B94C9;"
+                    onmouseover="this.style.color='#6461ab'" onmouseout="this.style.color='#9B94C9'">
+                    Back to Home
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Camera Modal -->
+    <div id="camera-modal" class="hidden fixed inset-0 flex items-center justify-center z-50"
+        style="background: rgba(44,42,94,0.92); backdrop-filter: blur(8px);">
+
+        <div class="relative w-full max-w-3xl p-6 text-white">
+            <h3 class="text-center text-3xl mb-6"
+                style="font-family:'Cormorant Garamond',serif; font-weight:300; letter-spacing:0.02em;">
+                Position your face inside the circle
+            </h3>
+
+            <div class="relative mx-auto w-[340px] h-[340px]">
+                <video id="video" autoplay class="absolute inset-0 w-full h-full object-cover rounded-full shadow-2xl"
+                    style="border: 4px solid rgba(143,140,212,0.4);">
+                </video>
+                <div class="absolute inset-0 rounded-full" style="border: 10px solid rgba(255,255,255,0.06);"></div>
+                <div class="absolute left-0 right-0 h-[3px] animate-scan"
+                    style="background: linear-gradient(90deg, transparent, rgba(143,140,212,0.9), transparent);">
+                </div>
+                <div class="absolute inset-0">
+                    <span class="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4"
+                        style="border-color:rgba(255,255,255,0.7);"></span>
+                    <span class="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4"
+                        style="border-color:rgba(255,255,255,0.7);"></span>
+                    <span class="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4"
+                        style="border-color:rgba(255,255,255,0.7);"></span>
+                    <span class="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4"
+                        style="border-color:rgba(255,255,255,0.7);"></span>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-6 mt-10">
+                <button onclick="capturePhoto()" class="px-8 py-3 rounded-full shadow-lg text-white font-medium"
+                    style="background: linear-gradient(135deg, #8F8CD4, #6461ab); box-shadow: 0 6px 24px rgba(100,97,171,0.5);">
+                    Capture Photo
+                </button>
+                <button onclick="closeCamera()" class="px-12 py-3 rounded-full shadow-lg text-white font-medium"
+                    style="background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.2);">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD MODAL -->
+    <div id="upload-modal" class="hidden fixed inset-0 flex items-center justify-center z-50 p-6"
+        style="background: rgba(44,42,94,0.4); backdrop-filter: blur(6px);">
+
+        <div class="w-full max-w-xl rounded-[28px] shadow-2xl p-8 relative"
+            style="background: linear-gradient(to bottom, rgba(244,236,240,1), rgba(252,236,224,1));">
+
+            <h3 class="text-3xl font-semibold mb-2"
+                style="color:#6461ab; font-family:'Cormorant Garamond',serif; font-weight:600;">Upload a Photo</h3>
+            <p class="text-gray-600 mb-6">Select an image from your device or drag & drop it below</p>
+
+            <label class="block rounded-2xl p-10 text-center cursor-pointer transition"
+                style="border: 2px dashed #b9b4e8;" onmouseover="this.style.background='rgba(255,255,255,0.4)'"
+                onmouseout="this.style.background='transparent'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 mx-auto mb-3" fill="none" viewBox="0 0 24 24"
+                    stroke="#6461ab">
+                    <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+                </svg>
+                <p class="text-lg text-gray-700">Click to upload image</p>
+                <p class="text-sm" style="color:#9B94C9;">JPG, PNG allowed</p>
+                <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)" class="hidden">
+            </label>
+
+            <img id="preview" class="hidden mt-6 rounded-xl shadow max-h-44 mx-auto"
+                style="border: 1px solid #b9b4e8;" />
+
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeUploadModal()" class="flex-1 py-3 rounded-full transition"
+                    style="border: 1.5px solid #b9b4e8; color:#9B94C9;"
+                    onmouseover="this.style.borderColor='#6461ab'; this.style.color='#6461ab';"
+                    onmouseout="this.style.borderColor='#b9b4e8'; this.style.color='#9B94C9';">
+                    Cancel
+                </button>
+                <button id="confirmBtn" onclick="proceedWithImage()"
+                    class="flex-1 text-white py-3 rounded-full shadow-lg hover:opacity-90 hidden font-medium"
+                    style="background: linear-gradient(135deg, #8F8CD4, #6461ab); box-shadow: 0 6px 20px rgba(100,97,171,0.3);">
+                    Continue
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <canvas id="canvas" class="hidden"></canvas>
+
+    <script>
+        function uploadPhoto() {
+            document.getElementById('upload-modal').classList.remove('hidden');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                const preview = document.getElementById("preview");
+                preview.src = ev.target.result;
+                preview.classList.remove("hidden");
+                document.getElementById("confirmBtn").classList.remove("hidden");
+                window._pendingSkinImage = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeUploadModal() {
+            document.getElementById('upload-modal').classList.add('hidden');
+        }
+
+        function takeSelfie() {
+            document.getElementById('camera-modal').classList.remove('hidden');
+            startCamera();
+        }
+
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    document.getElementById('video').srcObject = stream;
+                })
+                .catch(err => {
+                    alert('Camera access denied or not available.');
+                    console.error(err);
+                });
+        }
+
+        function capturePhoto() {
+            const canvas = document.getElementById('canvas');
+            const video = document.getElementById('video');
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            document.getElementById('uploaded-image').src = dataUrl;
+            localStorage.setItem('skinImage', dataUrl);
+            document.getElementById('image-area').classList.remove('hidden');
+            alert('Photo captured!');
+            closeCamera();
+        }
+
+        function closeCamera() {
+            const video = document.getElementById('video');
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('camera-modal').classList.add('hidden');
+        }
+
+        function proceedWithImage() {
+            let imgSrc = window._pendingSkinImage;
+            if (imgSrc) {
+                document.getElementById('uploaded-image').src = imgSrc;
+                localStorage.setItem('skinImage', imgSrc);
+            } else {
+                imgSrc = document.getElementById('uploaded-image').src;
+                if (imgSrc && imgSrc.startsWith('data:image')) {
+                    localStorage.setItem('skinImage', imgSrc);
+                }
+            }
+            window.location.href = "scan-profile.html";
+        }
+
+        function goBack() {
+            window.location.href = "scan-face.html";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Profile</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cream: #F2E6F1;
+            --warm-white: #FAF4F9;
+            --blush: #E8D4E8;
+            --rose: #6461ab;
+            --deep: #2C2A5E;
+            --mid: #6461ab;
+            --light-text: #9B94C9;
+            --gold: #8F8CD4;
+            --gold-light: #DDD9F5;
+            --border: rgba(100, 97, 171, 0.16);
+            --glass: rgba(242, 230, 241, 0.72);
+            --gradient-start: rgba(244, 236, 240, 1);
+            --gradient-end: rgba(252, 236, 224, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--deep);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+        .shell {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            background: linear-gradient(to bottom, rgba(244, 236, 240, 1), rgba(252, 236, 224, 1));
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(100, 97, 171, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(242, 230, 241, 0.5) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .panel-inner {
+            position: relative;
+            z-index: 1;
+            padding: 48px 52px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 2.2rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .progress-step-count {
+            font-size: 0.78rem;
+            color: var(--light-text);
+        }
+
+        .progress-track {
+            height: 2px;
+            background: #E8D4E8;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8F8CD4, #6461ab);
+            border-radius: 2px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 33%;
+        }
+
+        .step-dots {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .step-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #E8D4E8;
+            transition: all 0.4s ease;
+        }
+
+        .step-dot.active {
+            background: #6461ab;
+            width: 18px;
+            border-radius: 3px;
+        }
+
+        .panel-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.6rem;
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: 0.02em;
+            color: #000;
+            margin-bottom: 36px;
+        }
+
+        .panel-heading em {
+            font-style: italic;
+            color: #6461ab;
+        }
+
+        #chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--blush) transparent;
+        }
+
+        #chat::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #chat::-webkit-scrollbar-thumb {
+            background: var(--blush);
+            border-radius: 2px;
+        }
+
+        .bot-msg {
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+
+        .bot-bubble {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #FAF4F9;
+            border: 1px solid rgba(100, 97, 171, 0.16);
+            padding: 14px 20px;
+            border-radius: 0 18px 18px 18px;
+            font-size: 0.92rem;
+            color: #2C2A5E;
+            box-shadow: 0 2px 16px rgba(100, 97, 171, 0.08);
+            max-width: 85%;
+        }
+
+        .bot-icon {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #DDD9F5, #E8D4E8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bot-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: #6461ab;
+        }
+
+        .user-msg {
+            display: flex;
+            justify-content: flex-end;
+            animation: slideUp 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, #2C2A5E 0%, #6461ab 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 18px 0 18px 18px;
+            font-size: 0.9rem;
+            max-width: 75%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-link {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            text-decoration: underline;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            opacity: 1;
+        }
+
+        .options-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .opt {
+            background: transparent;
+            border: 1.5px solid #E8D4E8;
+            color: #6461ab;
+            padding: 9px 20px;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .opt:hover {
+            border-color: #6461ab;
+            color: #6461ab;
+            background: rgba(100, 97, 171, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .opt.selected {
+            background: #6461ab;
+            border-color: #6461ab;
+            color: white;
+            box-shadow: 0 4px 14px rgba(100, 97, 171, 0.3);
+        }
+
+        #finishBtn {
+            display: none;
+            margin: 32px 0;
+            padding: 15px 32px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            box-shadow: 0 8px 28px rgba(100, 97, 171, 0.35);
+        }
+
+        #finishBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(100, 97, 171, 0.45);
+        }
+
+        .skin-select-btn {
+            background: #fff;
+            color: #2C2A5E;
+            border: 2px solid #6461ab;
+            border-radius: 999px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 32px;
+            box-shadow: 0 2px 10px rgba(100, 97, 171, 0.10);
+            cursor: pointer;
+            transition: all 0.18s;
+            outline: none;
+        }
+
+        .skin-select-btn:hover,
+        .skin-select-btn:focus {
+            background: #6461ab;
+            color: #fff;
+            border: none;
+            border-color: #2C2A5E;
+            box-shadow: 0 4px 18px rgba(100, 97, 171, 0.18);
+            transform: translateY(-2px) scale(1.04);
+        }
+
+        .right-panel {
+            background: #F2E6F1;
+            padding: 48px 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .right-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(100, 97, 171, 0.18) 20%, rgba(100, 97, 171, 0.18) 80%, transparent);
+        }
+
+        .profile-card {
+            background: #FAF4F9;
+            border: 1px solid rgba(100, 97, 171, 0.16);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(100, 97, 171, 0.08);
+            margin: 40px;
+        }
+
+        .card-header {
+            padding: 28px 32px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #DDD9F5, #E8D4E8);
+            color: #6461ab;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-weight: 500;
+        }
+
+        .photo-area {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 45px;
+        }
+
+        .photo-frame {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(100, 97, 171, 0.16);
+            background: linear-gradient(135deg, #DDD9F5, #E8D4E8);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-placeholder svg {
+            width: 36px;
+            height: 36px;
+            stroke: #6461ab;
+            opacity: 0.6;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .profile-values {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-val-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .val-key {
+            font-size: 0.78rem;
+            color: var(--light-text);
+            min-width: 70px;
+        }
+
+        .val-value {
+            font-size: 0.88rem;
+            color: var(--deep);
+            font-weight: 500;
+        }
+
+        .val-pill {
+            font-size: 0.75rem;
+            background: rgba(100, 97, 171, 0.1);
+            color: #6461ab;
+            padding: 2px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(100, 97, 171, 0.2);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 0 32px;
+        }
+
+        .metrics-area {
+            padding: 24px 32px 32px;
+        }
+
+        .metrics-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #000;
+            margin-bottom: 20px;
+        }
+
+        .metric-item {
+            margin-bottom: 16px;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .metric-name {
+            font-size: 0.85rem;
+            color: var(--deep);
+        }
+
+        .metric-score {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #6461ab;
+        }
+
+        .metric-track {
+            height: 4px;
+            background: #E8D4E8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #8F8CD4, #6461ab);
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .analysis-cta {
+            padding: 20px 32px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(100, 97, 171, 0.12);
+        }
+
+        .cta-text {
+            font-size: 0.9rem;
+            color: #000000;
+        }
+
+        #viewFullBtn {
+            font-size: 1rem;
+            color: #6461ab;
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        #viewFullBtn:hover {
+            color: #2C2A5E;
+        }
+
+        #viewFullBtn:disabled,
+        #viewFullBtn.locked {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        #viewFullBtn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .skin-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            font-weight: 700;
+            line-height: 1.5;
+            padding: 24px 32px;
+            border-left: 2px solid #8F8CD4;
+            background: linear-gradient(90deg, rgba(100, 97, 171, 0.07), transparent);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .left-panel .panel-inner.hidden {
+            display: none !important;
+        }
+
+        .product-results {
+            width: 100%;
+        }
+
+        .product-header {
+            margin-bottom: 32px;
+        }
+
+        .product-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #2C2A5E;
+            margin-bottom: 16px;
+        }
+
+        .product-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid #E8D4E8;
+            color: #6461ab;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: #6461ab;
+            background: rgba(100, 97, 171, 0.06);
+        }
+
+        .tab-btn.active {
+            background: #6461ab;
+            border-color: #6461ab;
+            color: white;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(100, 97, 171, 0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(100, 97, 171, 0.15);
+        }
+
+        .product-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 16px;
+            display: block;
+        }
+
+        .product-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2C2A5E;
+            margin-bottom: 8px;
+        }
+
+        .product-card p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6461ab;
+            margin-bottom: 16px;
+        }
+
+        .add-to-cart-btn {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 97, 171, 0.3);
+        }
+
+        .send-routine-btn {
+            background: transparent;
+            border: 2px solid #E8D4E8;
+            color: #6461ab;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-routine-btn:hover {
+            background: #6461ab;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(100, 97, 171, 0.4);
+        }
+
+        .view-cart-btn {
+            background: transparent;
+            border: 2px solid #E8D4E8;
+            color: #6461ab;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-cart-btn:hover {
+            background: #6461ab;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 97, 171, 0.3);
+        }
+
+        #cart-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(44, 42, 94, 0.35);
+            backdrop-filter: blur(4px);
+        }
+
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            padding: 40px 36px;
+            width: 400px;
+            background: #FAF4F9;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 51;
+        }
+
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(44, 42, 94, 0.35);
+            backdrop-filter: blur(4px);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 400px;
+            background: #FAF4F9;
+            box-shadow: -20px 0 60px rgba(100, 97, 171, 0.12);
+            padding: 40px 36px;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 51;
+        }
+
+        .product-header {
+            margin-bottom: 32px;
+        }
+
+        .product-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #2C2A5E;
+            margin-bottom: 16px;
+        }
+
+        .product-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .sidebar-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(100, 97, 171, 0.16);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6461ab;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #E8D4E8;
+            border-color: #6461ab;
+        }
+
+        .sb-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 20px;
+            object-fit: cover;
+            margin: 0 auto 24px;
+            display: block;
+            border: 2px solid rgba(100, 97, 171, 0.16);
+        }
+
+        .sb-field {
+            margin-bottom: 20px;
+        }
+
+        .sb-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--light-text);
+            margin-bottom: 4px;
+        }
+
+        .sb-value {
+            font-size: 1rem;
+            color: var(--deep);
+            font-weight: 500;
+        }
+
+        .sb-metrics {
+            margin-top: 28px;
+        }
+
+        .sb-metric {
+            margin-bottom: 14px;
+        }
+
+        .sb-m-label {
+            font-size: 0.82rem;
+            color: var(--mid);
+            margin-bottom: 5px;
+        }
+
+        .sb-track {
+            height: 6px;
+            background: #E8D4E8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .sb-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8F8CD4, #6461ab);
+            border-radius: 6px;
+        }
+
+        .product-subheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .sb-cta .theme-btn {
+            margin-top: 36px;
+            padding: 14px 28px;
+            width: 100%;
+            background: linear-gradient(135deg, #8F8CD4, #6461ab);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 24px rgba(100, 97, 171, 0.28);
+        }
+
+        .sb-cta .theme-btn-outline {
+            margin-top: 36px;
+            padding: 14px 28px;
+            width: 100%;
+            background: transparent;
+            border: 2px solid #E8D4E8;
+            color: #6461ab;
+            border: none;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 24px rgba(100, 97, 171, 0.28);
+        }
+
+        .sb-cta .theme-btn-outline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(100, 97, 171, 0.38);
+        }
+
+        .product-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(100, 97, 171, 0.12);
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .prod-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #DDD9F5, #E8D4E8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #6461ab;
+        }
+
+        .prod-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--deep);
+            margin-bottom: 2px;
+        }
+
+        .prod-desc {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn-outline {
+            flex: 1;
+            padding: 12px;
+            border: 1.5px solid #E8D4E8;
+            background: transparent;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            color: #6461ab;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: #6461ab;
+            color: #2C2A5E;
+        }
+
+        .btn-filled {
+            flex: 2;
+            padding: 12px;
+            background: linear-gradient(135deg, #8F8CD4, #6461ab);
+            border: none;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(100, 97, 171, 0.35);
+        }
+
+        .btn-filled:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 28px rgba(100, 97, 171, 0.45);
+        }
+
+        @media (max-width: 768px) {
+            .shell {
+                transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel,
+            .right-panel {
+                padding: 18px 8px !important;
+                min-width: 0;
+            }
+
+            .panel-inner {
+                padding: 18px 8px !important;
+            }
+
+            .progress-section {
+                margin-bottom: 24px;
+            }
+
+            .panel-heading {
+                font-size: 1.5rem;
+                margin-bottom: 18px;
+            }
+
+            .photo-area {
+                flex-direction: column;
+                gap: 18px;
+                padding: 16px 0;
+            }
+
+            .photo-frame {
+                width: 90px;
+                height: 90px;
+            }
+
+            .profile-info {
+                width: 100%;
+            }
+
+            .metrics-area {
+                padding: 12px 0 18px 0;
+            }
+
+            .analysis-cta {
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px 0 18px 0;
+            }
+
+            .skin-quote {
+                font-size: 1rem;
+                padding: 12px 10px;
+            }
+
+            #sidebar {
+                width: 100vw;
+                max-width: 100vw;
+                padding: 18px 8px;
+            }
+
+            .sidebar-title {
+                font-size: 1.3rem;
+            }
+
+            .sb-photo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 12px;
+            }
+
+            .sb-field {
+                margin-bottom: 12px;
+            }
+
+            .sb-metrics {
+                margin-top: 14px;
+            }
+
+            .sb-m-label {
+                font-size: 0.7rem;
+            }
+
+            .sb-track {
+                height: 4px;
+            }
+
+            .sb-fill {
+                border-radius: 4px;
+            }
+
+            .sb-cta {
+                margin-top: 18px;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            #product-modal {
+                padding: 18px 8px;
+                max-width: 98vw;
+                width: 98vw;
+            }
+
+            #product-modal>div[style*='display:flex'] {
+                flex-direction: column !important;
+                gap: 1.2rem !important;
+            }
+
+            #product-modal>div[style*='display:flex']>div {
+                min-width: 0 !important;
+                max-width: 100vw !important;
+                width: 100% !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .panel-heading {
+                font-size: 1.1rem;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+
+            .metrics-title {
+                font-size: 0.8rem;
+            }
+
+            .profile-name-label {
+                font-size: 0.7rem;
+            }
+
+            .val-key,
+            .val-value,
+            .val-pill {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="resultsIndicator" class="results-indicator" style="display: none;">
+        ? Your personalized results are ready!
+    </div>
+    <div class="shell">
+        <!-- ══ LEFT PANEL ══ -->
+        <div class="left-panel">
+            <div class="panel-inner">
+
+                <div class="progress-section">
+                    <div class="progress-meta">
+                        <span class="progress-label">Skin Profile Setup</span>
+                        <span class="progress-step-count" id="progressText">Step 1 of 3</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                    <div class="step-dots">
+                        <div class="step-dot active"></div>
+                        <div class="step-dot"></div>
+                        <div class="step-dot"></div>
+                    </div>
+                </div>
+
+                <h1 class="panel-heading">Your <em>skin</em> story<br>begins here.</h1>
+
+                <div id="chat">
+                    <div class="bot-msg">
+                        <div class="bot-bubble">
+                            <div class="bot-icon">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            How do you identify?
+                        </div>
+                        <div class="options-wrap">
+                            <button class="opt" onclick="answer(this)">Woman</button>
+                            <button class="opt" onclick="answer(this)">Man</button>
+                            <button class="opt" onclick="answer(this)">Non-binary</button>
+                            <button class="opt" onclick="answer(this)">Prefer not to say</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="finishBtn" onclick="handleFinish()">
+                    View my skin analysis →
+                </button>
+            </div>
+        </div>
+
+        <!-- ══ RIGHT PANEL my profile ══ -->
+        <div class="right-panel">
+
+            <div class="skin-quote">
+                "Your skin is a reflection of everything you are — nourish it with intention."
+            </div>
+
+            <div class="profile-card">
+                <div class="card-header">
+                    <span class="card-title">My Profile</span>
+                    <span class="card-badge">Personalised</span>
+                </div>
+                <div class="photo-area">
+                    <div class="photo-frame">
+                        <div class="photo-placeholder" id="photoPlaceholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                            </svg>
+                        </div>
+                        <img id="userImg" alt="User photo"
+                            style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name-label">Profile Details</div>
+                        <div class="profile-values">
+                            <div class="profile-val-row">
+                                <span class="val-key">Gender</span>
+                                <span class="val-pill" id="g">—</span>
+                            </div>
+                            <div class="profile-val-row">
+                                <span class="val-key">Age range</span>
+                                <span class="val-pill" id="a">—</span>
+                            </div>
+                            <div class="profile-val-row">
+                                <span class="val-key">Sensitive</span>
+                                <span class="val-pill" id="s">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="analysis-cta">
+                    <span class="cta-text">Complete profile for full report</span>
+                    <button id="viewFullBtn" class="locked" onclick="viewFullAnalysis()">
+                        Full analysis
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ SIDEBAR analysis ══ -->
+    <div id="sidebar-backdrop" onclick="closeSidebar()">
+        <aside id="sidebar" role="dialog" aria-modal="true" aria-labelledby="sidebarTitle" tabindex="-1">
+            <div class="sidebar-header">
+                <h3 id="sidebarTitle" class="sidebar-title">Full Analysis</h3>
+                <button class="close-btn" onclick="closeSidebar()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <img id="sb-userImg" class="sb-photo" alt="Uploaded photo">
+
+            <div class="sb-field">
+                <div class="sb-label">Gender</div>
+                <div class="sb-value" id="sb-g">—</div>
+            </div>
+            <div class="sb-field">
+                <div class="sb-label">Age range</div>
+                <div class="sb-value" id="sb-a">—</div>
+            </div>
+            <div class="sb-field">
+                <div class="sb-label">Sensitive skin</div>
+                <div class="sb-value" id="sb-s">—</div>
+            </div>
+
+            <div class="sb-metrics">
+                <p class="metrics-title">Detailed Focus Areas</p>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Skin dullness — 73%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:73%"></div>
+                    </div>
+                </div>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Loss of firmness — 88%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:88%"></div>
+                    </div>
+                </div>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Uneven tone — 89%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:89%"></div>
+                    </div>
+                </div>
+
+                <div class="sb-metric">
+                    <div class="sb-m-label">Loss of firmness — 85%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:85%"></div>
+                    </div>
+                </div>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Uneven tone — 97%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:97%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ══ CART SIDEBAR ══ -->
+    <div id="cart-backdrop" onclick="closeCart()">
+        <aside id="cart-sidebar" role="dialog" aria-modal="true" aria-labelledby="cartTitle" tabindex="-1">
+            <div class="sidebar-header">
+                <h3 id="cartTitle" class="sidebar-title">My Cart</h3>
+                <button class="close-btn" onclick="closeCart()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sb-metrics">
+                <p class="metrics-title">Your Shopping Cart</p>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Items in cart</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width: 100%">Your cart is currently empty</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sb-cta">
+                <button class="theme-btn">Continue Shopping</button>
+                <button class="theme-btn-outline">Checkout</button>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const chat = document.getElementById('chat');
+        let step = 1;
+        let answers = {};
+
+        function addQuestion(question, opts, stepNum) {
+            if (stepNum === 2) {
+                const div = document.createElement('div');
+                div.className = 'bot-msg'; div.dataset.step = stepNum;
+                div.innerHTML = `
+                    <div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>${question}</div>
+                    <div class="options-wrap">
+                        <input type="number" id="ageInput" min="18" max="100" placeholder="Enter your age" style="background: transparent; width: max-content; padding: 8px; border: 2px solid #E8D4E8; border-radius: 8px; font-size: 0.8rem; font-family: 'DM Sans', sans-serif;">
+                        <button class="opt" onclick="submitAge()">Submit</button>
+                    </div>
+                `;
+                chat.appendChild(div);
+                chat.scrollTop = chat.scrollHeight;
+
+                document.getElementById('ageInput').addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        submitAge();
+                    }
+                });
+            } else {
+                const buttons = opts.map(o => `<button class="opt" onclick="answer(this)">${o}</button>`).join('');
+                const div = document.createElement('div');
+                div.className = 'bot-msg'; div.dataset.step = stepNum;
+                div.innerHTML = `<div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>${question}</div><div class="options-wrap">${buttons}</div>`;
+                chat.appendChild(div);
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+
+        function submitAge() {
+            const ageInput = document.getElementById('ageInput');
+            const age = parseInt(ageInput.value);
+
+            if (age >= 18 && age <= 100) {
+                answers.age = age + '';
+                addUserMsg(age + '', 2);
+                updateProfilePanel();
+                updateProgress();
+                step = 3; updateProgress();
+                setTimeout(() => addQuestion("Do you have sensitive skin?", ["Yes", "No", "A little"], 3), 380);
+            } else {
+                const div = document.createElement('div');
+                div.className = 'bot-msg';
+                div.innerHTML = `<div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>Please enter a valid age between 18 and 100.</div>`;
+                chat.appendChild(div);
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+
+        function showResultsProfileView() {
+            const panelInner = document.querySelector('.left-panel .panel-inner');
+            if (panelInner) {
+                panelInner.style.display = 'none';
+            }
+            const profileCard = document.querySelector('.profile-card');
+            const leftPanel = document.querySelector('.left-panel');
+            if (profileCard && leftPanel) leftPanel.appendChild(profileCard);
+            const stored = JSON.parse(localStorage.getItem('skinAnswers') || '{}');
+            document.getElementById('g').innerText = stored.gender || answers.gender || '—';
+            document.getElementById('a').innerText = stored.age || answers.age || '—';
+            document.getElementById('s').innerText = stored.sensitive || answers.sensitive || '—';
+            const img = localStorage.getItem('skinImage');
+            if (img && img.length > 10) {
+                document.getElementById('userImg').src = img;
+                document.getElementById('userImg').style.display = 'block';
+                document.getElementById('photoPlaceholder').style.display = 'none';
+            }
+            showProductResults();
+        }
+
+        function handleFinish() {
+            const finishBtn = document.getElementById('finishBtn');
+            const originalText = finishBtn.innerHTML;
+            finishBtn.innerHTML = 'Analyzing your skin...';
+            finishBtn.disabled = true;
+            finishBtn.style.opacity = '0.7';
+
+            // Simulate processing time for better UX
+            setTimeout(() => {
+                finishBtn.innerHTML = 'Generating recommendations...';
+            }, 800);
+
+            setTimeout(() => {
+                finishBtn.innerHTML = 'Almost done...';
+            }, 1600);
+
+            setTimeout(() => {
+                finishBtn.innerHTML = originalText;
+                finishBtn.disabled = false;
+                finishBtn.style.opacity = '1';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                document.querySelector('.shell').classList.add('transitioning');
+
+                setTimeout(() => {
+                    const indicator = document.getElementById('resultsIndicator');
+                    indicator.style.display = 'block';
+
+                    showResultsProfileView();
+
+                    setTimeout(() => {
+                        indicator.style.display = 'none';
+                    }, 3000);
+                    localStorage.setItem('skinAnswers', JSON.stringify(answers));
+
+                    const viewFullBtn = document.getElementById('viewFullBtn');
+                    if (viewFullBtn) {
+                        viewFullBtn.classList.remove('locked');
+                        viewFullBtn.disabled = false;
+                    }
+
+                    // Remove transition class after animation
+                    setTimeout(() => {
+                        document.querySelector('.shell').classList.remove('transitioning');
+                    }, 600);
+                }, 100);
+            }, 2400);
+
+            return;
+            if (!answers.gender || !answers.age || !answers.sensitive || !answers.skinType) {
+                alert('Please complete all questions before viewing your analysis.');
+                return;
+            }
+            // Show results indicator
+            const indicator = document.getElementById('resultsIndicator');
+            indicator.style.display = 'block';
+
+            showResultsProfileView();
+
+            // Hide indicator after animation
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 3000);
+            localStorage.setItem('skinAnswers', JSON.stringify(answers));
+
+            const viewFullBtn = document.getElementById('viewFullBtn');
+            if (viewFullBtn) {
+                viewFullBtn.classList.remove('locked');
+                viewFullBtn.disabled = false;
+            }
+        }
+
+        function answer(btn) {
+            btn.closest('.options-wrap').querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const text = btn.innerText.trim();
+
+            if (step === 1) {
+                answers.gender = text;
+                addUserMsg(text, 1);
+                updateProfilePanel();
+                step = 2; updateProgress();
+                setTimeout(() => addQuestion("What's your age?", [], 2), 380);
+            } else if (step === 2) {
+                const ageInput = document.getElementById('ageInput');
+                if (ageInput) {
+                    const age = parseInt(ageInput.value);
+                    if (age >= 18 && age <= 100) {
+                        answers.age = age + '';
+                        addUserMsg(age + '', 2);
+                        updateProfilePanel();
+                        updateProgress();
+                        step = 3; updateProgress();
+                        setTimeout(() => addQuestion("Do you have sensitive skin?", ["Yes", "No", "A little"], 3), 380);
+                    } else {
+                        const div = document.createElement('div');
+                        div.className = 'bot-msg';
+                        div.innerHTML = `<div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>Please enter a valid age between 18 and 100.</div>`;
+                        chat.appendChild(div);
+                        chat.scrollTop = chat.scrollHeight;
+                    }
+                }
+            } else if (step === 3) {
+                answers.sensitive = text;
+                addUserMsg(text, 3);
+                updateProfilePanel();
+                updateProgress();
+                setTimeout(() => showSkinTypeCarousel(), 420);
+            }
+        }
+
+        function editAnswer(targetStep) {
+            chat.innerHTML = '';
+            const opts1 = ["Woman", "Man", "Non-binary", "Prefer not to say"];
+            const opts2 = [];
+            const opts3 = ["Yes", "No", "A little"];
+            step = targetStep;
+
+            addQuestion("How do you identify?", opts1, 1);
+            if (targetStep >= 2 && answers.gender) { addUserMsg(answers.gender, 1); addQuestion("What's your age?", opts2, 2); }
+            if (targetStep >= 3 && answers.age) { addUserMsg(answers.age, 2); addQuestion("Do you have sensitive skin?", opts3, 3); }
+
+            if (targetStep === 1) answers = {};
+            else if (targetStep === 2) { answers = { gender: answers.gender }; }
+            else if (targetStep === 3) { answers = { gender: answers.gender, age: answers.age }; }
+        }
+
+        const skinTypes = [
+            {
+                key: 'oily',
+                label: 'Oily Skin',
+                desc: 'Shiny, greasy, and prone to breakouts or enlarged pores.',
+                img: './skin-oily.jpg'
+            },
+            {
+                key: 'normal',
+                label: 'Normal Skin',
+                desc: 'Balanced with no dry areas or excess shine.',
+                img: './skin-normal.jpg'
+            },
+            {
+                key: 'dry',
+                label: 'Dry Skin',
+                desc: 'Some dry and flaky areas, feels tight or rough.',
+                img: './skin-dry.jpg'
+            },
+            {
+                key: 'combination',
+                label: 'Combination Skin',
+                desc: 'Oily in some areas (T-zone), dry or normal elsewhere.',
+                img: './skin-combination.jpg'
+            }
+        ];
+        let skinTypeIndex = 0;
+        let autoplayInterval;
+        let isAutoplay = true;
+
+        function showSkinTypeCarousel() {
+            const div = document.createElement('div');
+            div.className = 'bot-msg';
+            div.innerHTML = `
+                <div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>Confirm to learn more about your results or select the type that better matches your skin.</div>
+                <div id="skinTypeCarousel" style="position:relative; margin:1.5rem 0; overflow:hidden;">
+                    <div style="display:flex; align-items:center; justify-content:flex-start; gap:1.5rem;">
+                        <button id="skinPrevBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer; padding:0.5rem; z-index:2; position:relative; flex-shrink:0;">&#8592;</button>
+                        <div id="skinTypeContainer" style="display:flex; gap:1.5rem; transition:transform 0.3s ease; will-change:transform;">
+                        </div>
+                        <button id="skinNextBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer; padding:0.5rem; z-index:2; position:relative; flex-shrink:0;">&#8594;</button>
+                    </div>
+                    <div style="text-align:center; margin-top:1rem;">
+                        <button id="autoplayToggle" style="background:#6461ab; color:white; border:none; padding:0.5rem 1rem; border-radius:20px; font-size:0.8rem; cursor:pointer; margin-right:1rem;">⏸</button>
+                        <span style="font-size:0.8rem; color:#666;">Showing 2 of ${skinTypes.length} skin types</span>
+                    </div>
+                </div>
+            `;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            initializeCarousel();
+            startAutoplay();
+        }
+
+        function initializeCarousel() {
+            const container = document.getElementById('skinTypeContainer');
+            skinTypes.forEach((type, index) => {
+                const card = document.createElement('div');
+                card.className = 'skin-type-card';
+                card.style.cssText = 'background:#fff; border-radius:18px; box-shadow:0 2px 16px rgba(100,97,171,0.10); padding:1.2rem; min-width:200px; max-width:280px; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:all 0.3s ease;';
+                card.innerHTML = `
+                    <img src="${type.img}" alt="${type.label}" style="width:100px; height:100px; object-fit:cover; border-radius:12px; margin-bottom:0.8rem;">
+                    <div style="font-weight:600; font-size:1rem; margin-bottom:0.4rem; text-align:center;">${type.label}</div>
+                    <div style="font-size:0.85rem; color:#666; margin-bottom:1rem; text-align:center; line-height:1.3;">${type.desc}</div>
+                    <button class="skin-select-btn" style="font-size:0.85rem; padding:8px 20px;" data-index="${index}">Select</button>
+                `;
+                card.onclick = () => selectSkinTypeByIndex(index);
+                container.appendChild(card);
+            });
+            document.getElementById('skinPrevBtn').onclick = () => navigateCarousel(-1);
+            document.getElementById('skinNextBtn').onclick = () => navigateCarousel(1);
+            document.getElementById('autoplayToggle').onclick = toggleAutoplay;
+            document.querySelectorAll('.skin-select-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    selectSkinTypeByIndex(parseInt(btn.dataset.index));
+                };
+            });
+            updateCarouselView();
+        }
+
+        function navigateCarousel(direction) {
+            skinTypeIndex = (skinTypeIndex + direction + skinTypes.length) % skinTypes.length;
+            updateCarouselView();
+        }
+
+        function updateCarouselView() {
+            const container = document.getElementById('skinTypeContainer');
+            const carousel = document.getElementById('skinTypeCarousel');
+            const cardWidth = 280;
+            const numVisibleCards = 2;
+            const totalContainerWidth = skinTypes.length * cardWidth;
+            container.style.width = `${totalContainerWidth}px`;
+            const offset = -skinTypeIndex * cardWidth + (cardWidth / 2);
+            container.style.transform = `translateX(${offset}px)`;
+
+            document.querySelectorAll('.skin-type-card').forEach((card, index) => {
+                const isCurrent = index === skinTypeIndex;
+                const isNext = index === (skinTypeIndex + 1) % skinTypes.length;
+                const isVisible = isCurrent || isNext;
+
+                card.style.opacity = isVisible ? '1' : '0.3';
+                card.style.transform = isCurrent ? 'scale(1)' : (isNext ? 'scale(0.9)' : 'scale(0.8)');
+                card.style.zIndex = isCurrent ? '2' : (isNext ? '1' : '0');
+            });
+        }
+
+        function selectSkinTypeByIndex(index) {
+            stopAutoplay();
+            skinTypeIndex = index;
+            selectSkinType();
+        }
+
+        function startAutoplay() {
+            if (autoplayInterval) clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(() => {
+                if (isAutoplay) {
+                    navigateCarousel(1);
+                }
+            }, 3000);
+        }
+
+        function toggleAutoplay() {
+            isAutoplay = !isAutoplay;
+            const btn = document.getElementById('autoplayToggle');
+            btn.textContent = isAutoplay ? '⏸' : '▶';
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+            isAutoplay = false;
+            const btn = document.getElementById('autoplayToggle');
+            if (btn) btn.textContent = 'Play Auto-play';
+        }
+
+        function backToQuiz() {
+            document.querySelector('.shell').classList.remove('results-view');
+
+            const profileCard = document.querySelector('.profile-card');
+            const rightPanel = document.querySelector('.right-panel');
+            const panelInner = document.querySelector('.left-panel .panel-inner');
+
+            if (profileCard && rightPanel) {
+                rightPanel.appendChild(profileCard);
+            }
+
+            if (panelInner) {
+                panelInner.style.display = 'flex';
+            }
+
+            if (answers.gender && answers.age && answers.sensitive && answers.skinType) {
+                document.getElementById('finishBtn').style.display = 'inline-block';
+            }
+        }
+
+        function selectSkinType() {
+            const st = skinTypes[skinTypeIndex];
+            answers.skinType = st.label;
+            addUserMsg(`My skin type is ${st.label.toLowerCase()}`, 4);
+            updateProfilePanel();
+            setTimeout(() => {
+                addBot('Great! You can now access your skin analysis by clicking the button below.');
+                document.getElementById('finishBtn').style.display = 'inline-block';
+            }, 400);
+        }
+
+        function addUserMsg(text, stepNum) {
+            const div = document.createElement('div');
+            div.className = 'user-msg'; div.dataset.step = stepNum;
+            div.innerHTML = `<div class="user-bubble">${text}<span class="edit-link" onclick="editAnswer(${stepNum})">edit</span></div>`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function addBot(text) {
+            const div = document.createElement('div');
+            div.className = 'bot-msg';
+            document.querySelectorAll('.step-dot').forEach((d, i) => {
+                d.classList.toggle('active', i < step);
+            });
+        }
+
+        function updateProgress() {
+            const pct = step === 1 ? 33 : step === 2 ? 66 : 100;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            if (progressBar) progressBar.style.width = pct + '%';
+            if (progressText) progressText.innerText = `Step ${Math.min(step, 3)} of 3`;
+            const stepDots = document.querySelectorAll('.step-dot');
+            stepDots.forEach((d, i) => {
+                d.classList.toggle('active', i < step);
+            });
+        }
+
+        function updateProfilePanel() {
+            document.getElementById('g').innerText = answers.gender || '—';
+            document.getElementById('a').innerText = answers.age || '—';
+            document.getElementById('s').innerText = answers.sensitive || '—';
+        }
+
+        function closeSidebar() {
+            const bd = document.getElementById('sidebar-backdrop');
+            const sb = document.getElementById('sidebar');
+            sb.classList.remove('open');
+            document.body.style.overflow = '';
+            setTimeout(() => { bd.style.display = 'none'; }, 350);
+        }
+
+        function viewFullAnalysis() {
+            const bd = document.getElementById('sidebar-backdrop');
+            const sb = document.getElementById('sidebar');
+
+            const stored = JSON.parse(localStorage.getItem('skinAnswers') || '{}');
+            document.getElementById('sb-g').innerText = stored.gender || answers.gender || '—';
+            document.getElementById('sb-a').innerText = stored.age || answers.age || '—';
+            document.getElementById('sb-s').innerText = stored.sensitive || answers.sensitive || '—';
+
+            const img = localStorage.getItem('skinImage');
+            if (img && img.length > 10) {
+                document.getElementById('sb-userImg').src = img;
+            } else {
+                document.getElementById('sb-userImg').src = '';
+            }
+
+            bd.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
+                sb.classList.add('open');
+                sb.focus();
+            });
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                const sbd = document.getElementById('sidebar-backdrop');
+                const cbd = document.getElementById('cart-backdrop');
+                if (cbd && cbd.style.display === 'flex') closeCart();
+                else if (sbd && sbd.style.display === 'flex') closeSidebar();
+            }
+        });
+
+        function showProductResults() {
+            const rightPanel = document.querySelector('.right-panel');
+            rightPanel.innerHTML = '';
+            const productResults = document.createElement('div');
+            productResults.className = 'product-results';
+            productResults.innerHTML = `
+                    <div class="product-header">
+                        <h2>My Personalized Routine</h2>
+                        <div class="product-subheader">
+                            <div class="product-tabs">
+                                <button class="tab-btn active" onclick="switchTab('day')">Day</button>
+                                <button class="tab-btn" onclick="switchTab('night')">Night</button>
+                            </div>
+                            <div class="product-tabs">
+                                  <button class="view-cart-btn" onclick="showCart()">View Cart</button>
+                                  <button class="send-routine-btn" onclick="sendRoutine()">SEND MY ROUTINE</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="dayTab">
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <img src="./citaphil.png" alt="Day Cleanser">
+                                <h3>Gentle Day Cleanser</h3>
+                                <p>Perfect for morning cleansing without stripping natural oils</p>
+                                <div class="product-price">$24.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Gentle Day Cleanser', 24.99)">Add to Cart</button>
+                            </div>
+                            <div class="product-card">
+                                <img src="./serum.png" alt="Day Serum">
+                                <h3>Vitamin C Serum</h3>
+                                <p>Brightens and protects with antioxidant power</p>
+                                <div class="product-price">$34.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Vitamin C Serum', 34.99)">Add to Cart</button>
+                            </div>
+                            <div class="product-card">
+                                <img src="./mosturizer.png" alt="Day Moisturizer">
+                                <h3>Hydrating Day Cream</h3>
+                                <p>Lightweight moisturizer with SPF 30 protection</p>
+                                <div class="product-price">$28.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Hydrating Day Cream', 28.99)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="nightTab" style="display: none;">
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <img src="./serum.png" alt="Night Serum">
+                                <h3>Retinol Night Serum</h3>
+                                <p>Promotes cell turnover and reduces fine lines</p>
+                                <div class="product-price">$44.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Retinol Night Serum', 44.99)">Add to Cart</button>
+                            </div>
+                            <div class="product-card">
+                                <img src="./citaphil.png" alt="Night Cleanser">
+                                <h3>Deep Clean Night Cleanser</h3>
+                                <p>Removes makeup and impurities while you sleep</p>
+                                <div class="product-price">$26.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Deep Clean Night Cleanser', 26.99)">Add to Cart</button>
+                            </div>
+                            <div class="product-card">
+                                <img src="./mosturizer.png" alt="Night Moisturizer">
+                                <h3>Repair Night Cream</h3>
+                                <p>Rich moisturizer for overnight skin repair</p>
+                                <div class="product-price">$32.99</div>
+                                <button class="add-to-cart-btn" onclick="addToCart('Repair Night Cream', 32.99)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            rightPanel.appendChild(productResults);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('dayTab').style.display = tab === 'day' ? 'block' : 'none';
+            document.getElementById('nightTab').style.display = tab === 'night' ? 'block' : 'none';
+        }
+
+        function addToCart(productName, price) {
+            alert(`Added ${productName} to cart - $${price}`);
+        }
+
+        function showCart() {
+            const bd = document.getElementById('cart-backdrop');
+            const sb = document.getElementById('cart-sidebar');
+            bd.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
+                sb.classList.add('open');
+                sb.focus();
+            });
+        }
+
+        function closeCart() {
+            const bd = document.getElementById('cart-backdrop');
+            const sb = document.getElementById('cart-sidebar');
+            sb.classList.remove('open');
+            document.body.style.overflow = '';
+            setTimeout(() => { bd.style.display = 'none'; }, 350);
+        }
+
+        function sendRoutine() {
+            const email = prompt('Enter your email to receive your personalized routine:');
+            if (email) {
+                alert(`Your personalized routine has been sent to ${email}`);
+            }
+        }
+    </script>
+</body>
+
+</html>
