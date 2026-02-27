@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skin Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
         rel="stylesheet">
@@ -100,6 +101,7 @@
             display: flex;
             flex-direction: column;
             flex: 1;
+            padding-left: 140px;
         }
 
         .progress-section {
@@ -364,12 +366,19 @@
         }
 
         .profile-card {
-            background: #FAF4F9;
+            background: #FFFFFF;
             border: 1px solid rgba(100, 97, 171, 0.16);
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 8px 40px rgba(100, 97, 171, 0.08);
             margin: 40px;
+        }
+
+        .sb-focus-areas {
+            background: #FFFFFF;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-top: 0;
         }
 
         .card-header {
@@ -912,10 +921,6 @@
             font-weight: 500;
         }
 
-        .sb-metrics {
-            margin-top: 28px;
-        }
-
         .sb-metric {
             margin-bottom: 14px;
         }
@@ -1068,6 +1073,17 @@
             box-shadow: 0 10px 28px rgba(100, 97, 171, 0.45);
         }
 
+        .nisa-report {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .results-view .nisa-report {
+            display: block;
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             .shell {
                 transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1106,10 +1122,11 @@
 
             .profile-info {
                 width: 100%;
+                padding: 20px;
             }
 
             .metrics-area {
-                padding: 12px 0 18px 0;
+                padding: 12px 18px;
             }
 
             .analysis-cta {
@@ -1126,7 +1143,7 @@
             #sidebar {
                 width: 100vw;
                 max-width: 100vw;
-                padding: 18px 8px;
+                padding: 20px;
             }
 
             .sidebar-title {
@@ -1188,6 +1205,22 @@
                 gap: 10px;
                 margin-top: 18px;
             }
+
+            .profile-card {
+                margin: 20px;
+            }
+
+            .card-header {
+                padding: 28px 20px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .product-subheader {
+                flex-direction: column;
+            }
+
         }
 
         @media (max-width: 480px) {
@@ -1217,9 +1250,62 @@
 </head>
 
 <body>
+    <!-- ══ HEADER ══ -->
+    <header class="bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <img src="./novera-logo.svg" alt="Novéra" class="h-10 w-auto">
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-10 font-medium text-gray-800">
+                    <a href="#" class="hover:text-gray-600 transition">Home</a>
+
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 hover:text-gray-600 transition">
+                            Our Products
+                            <svg class="w-4 h-4 mt-[2px]" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <a href="#" class="hover:text-gray-600 transition">Science</a>
+                    <a href="#" class="hover:text-gray-600 transition">Contact Us</a>
+                </nav>
+
+                <div>
+
+                </div>
+
+                <!-- Mobile Button -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-6">
+            <a href="#" class="block py-2 text-gray-800">Home</a>
+            <a href="#" class="block py-2 text-gray-800">Our Products</a>
+            <a href="#" class="block py-2 text-gray-800">Science</a>
+            <a href="#" class="block py-2 text-gray-800">Contact Us</a>
+        </div>
+    </header>
+
     <div id="resultsIndicator" class="results-indicator" style="display: none;">
-        ? Your personalized results are ready!
     </div>
+
     <div class="shell">
         <!-- ══ LEFT PANEL ══ -->
         <div class="left-panel">
@@ -1276,48 +1362,90 @@
             </div>
 
             <div class="profile-card">
-                <div class="card-header">
-                    <span class="card-title">My Profile</span>
-                    <span class="card-badge">Personalised</span>
-                </div>
-                <div class="photo-area">
-                    <div class="photo-frame">
-                        <div class="photo-placeholder" id="photoPlaceholder">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
-                                <circle cx="12" cy="8" r="4" />
-                                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-                            </svg>
-                        </div>
-                        <img id="userImg" alt="User photo"
-                            style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+                <div class="sb-focus-areas">
+                    <div class="card-header">
+                        <span class="card-title">My Profile</span>
+                        <span class="card-badge">Personalised</span>
                     </div>
-                    <div class="profile-info">
-                        <div class="profile-name-label">Profile Details</div>
-                        <div class="profile-values">
-                            <div class="profile-val-row">
-                                <span class="val-key">Gender</span>
-                                <span class="val-pill" id="g">—</span>
+                    <div class="photo-area">
+                        <div class="photo-frame">
+                            <div class="photo-placeholder" id="photoPlaceholder">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                                </svg>
                             </div>
-                            <div class="profile-val-row">
-                                <span class="val-key">Age range</span>
-                                <span class="val-pill" id="a">—</span>
-                            </div>
-                            <div class="profile-val-row">
-                                <span class="val-key">Sensitive</span>
-                                <span class="val-pill" id="s">—</span>
+                            <img id="userImg" alt="User photo"
+                                style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name-label">Profile Details</div>
+                            <div class="profile-values">
+                                <div class="profile-val-row">
+                                    <span class="val-key">Gender</span>
+                                    <span class="val-pill" id="g">—</span>
+                                </div>
+                                <div class="profile-val-row">
+                                    <span class="val-key">Age range</span>
+                                    <span class="val-pill" id="a">—</span>
+                                </div>
+                                <div class="profile-val-row">
+                                    <span class="val-key">Sensitive</span>
+                                    <span class="val-pill" id="s">—</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="divider"></div>
-                <div class="analysis-cta">
-                    <span class="cta-text">Complete profile for full report</span>
-                    <button id="viewFullBtn" class="locked" onclick="viewFullAnalysis()">
-                        Full analysis
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                    </button>
+                <div class="sb-focus-areas nisa-report">
+                    <div class="card-header">
+                        <span class="card-title">Nisa Report</span>
+                    </div>
+                    <div class="sb-metrics metrics-area">
+                        <p class="metrics-title">Detailed Focus Areas</p>
+                        <div class="sb-metric">
+                            <div class="sb-m-label">Skin dullness — 73%</div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width:73%"></div>
+                            </div>
+                        </div>
+                        <div class="sb-metric">
+                            <div class="sb-m-label">Loss of firmness — 88%</div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width:88%"></div>
+                            </div>
+                        </div>
+                        <div class="sb-metric">
+                            <div class="sb-m-label">Uneven tone — 89%</div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width:89%"></div>
+                            </div>
+                        </div>
+
+                        <div class="sb-metric">
+                            <div class="sb-m-label">Loss of firmness — 85%</div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width:85%"></div>
+                            </div>
+                        </div>
+                        <div class="sb-metric">
+                            <div class="sb-m-label">Uneven tone — 97%</div>
+                            <div class="sb-track">
+                                <div class="sb-fill" style="width:97%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="analysis-cta">
+                        <span class="cta-text">Complete profile for full report</span>
+                        <button id="viewFullBtn" class="locked" onclick="viewFullAnalysis()">
+                            Full analysis
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1383,6 +1511,18 @@
                         <div class="sb-fill" style="width:97%"></div>
                     </div>
                 </div>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Loss of firmness — 85%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:85%"></div>
+                    </div>
+                </div>
+                <div class="sb-metric">
+                    <div class="sb-m-label">Uneven tone — 97%</div>
+                    <div class="sb-track">
+                        <div class="sb-fill" style="width:97%"></div>
+                    </div>
+                </div>
             </div>
         </aside>
     </div>
@@ -1416,6 +1556,101 @@
         </aside>
     </div>
 
+    <!-- ══FOOTER══ -->
+    <footer class="relative text-black bg-cover bg-center bg-no-repeat
+         bg-[url('./MobileFooterBg.webp')]
+         md:bg-[url('./DesktopFooterBg.webp')]">
+
+        <div class="max-w-7xl mx-auto md:px-12 px-3 py-8 md:py-12">
+
+            <!-- GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 items-start">
+
+                <!-- Quick Links -->
+                <div class="flex justify-center items-center gap-10 md:gap-14 flex-col md:flex-row">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-[18px] font-semibold mb-6">Quick Links</h3>
+                        <ul class="space-y-4 text-[16px] font-normal">
+                            <li><a href="#" class="hover:opacity-70 transition">Home</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Science</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Our Products -->
+                    <div class="text-center md:text-left">
+                        <h3 class="text-[18px] font-semibold mb-6">Our Products</h3>
+                        <ul class="space-y-4 text-[16px] font-normal">
+                            <li><a href="#" class="hover:opacity-70 transition">Rose Quartz Infused Face Mist</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Clear Quartz Infused Face Mist</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Amethyst Quartz Infused Face Mist</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Center Logo -->
+                <div class="flex flex-col items-center text-center order-first md:order-none">
+
+                    <!-- SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="130" fill="none" viewBox="0 0 80 120"
+                        class="mb-8">
+                        <path fill="#000"
+                            d="M14.535 0a22.67 22.67 0 0 0 11.347 11.337 22.67 22.67 0 0 0-11.347 11.338A22.67 22.67 0 0 0 3.188 11.337 22.67 22.67 0 0 0 14.535 0" />
+                        <path fill="#000"
+                            d="M2.091 23.987C16.718 41.32 26.053 61.904 28.567 84.533c1.006 9.362 1.2 24.364-4.662 32.219-4.422 5.401-10.684 3.243-13.758-2.112-8.022-14.796-6.113-36.535-2.81-52.53 2.947-13.53 8.17-27.15 19.78-35.736 13.871-10.162 30.909-4.944 39.57 9.133 8.068 11.806 12.01 25.963 13.039 40.11.777 11.622-.069 23.416-2.903 34.719 0-3.026-.022-6.382-.08-9.419-.331-14.26-2.136-28.852-7.199-42.141-2.49-6.348-5.747-12.72-10.067-17.982-7.976-10.881-20.031-12.228-28.956-1.485-6.193 7.159-9.37 16.464-11.678 25.53-3.177 13.118-6.685 33.486-1.245 46.034l-.15-.263c.355.674.778 1.222.927 1.381.01.023.034.046.045.069 0 0-.011-.011-.023 0 0 .046-.102-.034-.182 0-.183-.046-.457.08-.492.091-.046.057 0 .012.023.035.034 0 .114-.08.194-.103.869-.731 1.314-1.564 1.909-2.729 1.657-3.528 2.525-7.741 3.05-11.703 1.566-12.718-.65-25.757-4.262-38.008C14.832 47.164 8.09 35.907 0 25.654z" />
+                    </svg>
+
+                    <!-- Made in Canada -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-xl">🍁</span>
+                        <p class="text-[20px] mt-3 font-medium">Made in Canada</p>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="text-center md:text-left">
+                    <h3 class="text-[18px] font-semibold mb-6">Contact Info</h3>
+
+                    <div class="space-y-5 text-[16px]">
+
+                        <a href="tel:+18007212636"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:opacity-70 transition">
+                            <img src="https://alpha.noveraskincare.com/icons/call-icon.svg" width="16">
+                            +1 800-721-2636
+                        </a>
+
+                        <a href="mailto:support@noveraskincare.com"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:opacity-70 transition">
+                            <img src="https://alpha.noveraskincare.com/icons/mail-icon.svg" width="18">
+                            support@noveraskincare.com
+                        </a>
+
+                        <div class="flex items-start justify-center md:justify-start gap-3">
+                            <img src="https://alpha.noveraskincare.com/images/svg/location-icon.svg" width="15">
+                            <span>2285 Dunwin Dr #12, Mississauga, ON L5L 3S3, Canada</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom -->
+            <div class="mt-14 md:mt-16 text-center text-[13px] opacity-70">
+                © 2026. All Rights Reserved. Design by Axlrdata
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
     <script>
         const chat = document.getElementById('chat');
         let step = 1;
@@ -1428,7 +1663,7 @@
                 div.innerHTML = `
                     <div class="bot-bubble"><div class="bot-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>${question}</div>
                     <div class="options-wrap">
-                        <input type="number" id="ageInput" min="18" max="100" placeholder="Enter your age" style="background: transparent; width: max-content; padding: 8px; border: 2px solid #E8D4E8; border-radius: 8px; font-size: 0.8rem; font-family: 'DM Sans', sans-serif;">
+                        <input type="number" id="ageInput" min="18" max="100" placeholder="Enter your age" style="background: transparent; width: max-content; padding: 8px 20px; border: 2px solid #E8D4E8; border-radius: 8px; font-size: 0.8rem; font-family: 'DM Sans', sans-serif;">
                         <button class="opt" onclick="submitAge()">Submit</button>
                     </div>
                 `;
@@ -1472,6 +1707,18 @@
 
         function showResultsProfileView() {
             const panelInner = document.querySelector('.left-panel .panel-inner');
+            if (panelInner) {
+                panelInner.style.display = 'none';
+            }
+
+            // Show nisa-report when profile moves to left
+            const nisaReport = document.querySelector('.nisa-report');
+            if (nisaReport) {
+                nisaReport.style.display = 'block';
+                setTimeout(() => {
+                    nisaReport.style.opacity = '1';
+                }, 100);
+            }
             if (panelInner) {
                 panelInner.style.display = 'none';
             }
@@ -1758,6 +2005,16 @@
         }
 
         function backToQuiz() {
+            document.querySelector('.shell').classList.remove('results-view');
+
+            // Hide nisa-report when going back to quiz
+            const nisaReport = document.querySelector('.nisa-report');
+            if (nisaReport) {
+                nisaReport.style.opacity = '0';
+                setTimeout(() => {
+                    nisaReport.style.display = 'none';
+                }, 300);
+            }
             document.querySelector('.shell').classList.remove('results-view');
 
             const profileCard = document.querySelector('.profile-card');

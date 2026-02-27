@@ -29,16 +29,17 @@
             opacity: 1;
             visibility: visible;
         }
-         @media (max-width: 768px) {
+
+        @media (max-width: 768px) {
             .panel {
                 width: 100%;
                 left: 0;
             }
-         }
+        }
     </style>
 </head>
 
-<body class="text-gray-900 max-w-5xl mx-auto relative overflow-x-hidden">
+<body class="text-gray-900 mx-auto relative overflow-x-hidden">
     <div class="fixed inset-0 -z-10">
         <div class="absolute inset-0 bg-gradient-to-b from-[rgba(244,236,240,1)] to-[rgba(252,236,224,1)]"></div>
         <div class="absolute inset-0 bg-[url('./doddles-2.jpg')] bg-cover bg-center opacity-20"></div>
@@ -46,12 +47,65 @@
 
     <div id="overlay" class="overlay fixed inset-0 bg-black/30 z-40"></div>
 
+    <!-- ══ HEADER ══ -->
+    <header class="bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <img src="./novera-logo.svg" alt="Novéra" class="h-10 w-auto">
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-10 font-medium text-gray-800">
+                    <a href="#" class="hover:text-gray-600 transition">Home</a>
+
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 hover:text-gray-600 transition">
+                            Our Products
+                            <svg class="w-4 h-4 mt-[2px]" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <a href="#" class="hover:text-gray-600 transition">Science</a>
+                    <a href="#" class="hover:text-gray-600 transition">Contact Us</a>
+                </nav>
+
+                <div>
+
+                </div>
+
+                <!-- Mobile Button -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-6">
+            <a href="#" class="block py-2 text-gray-800">Home</a>
+            <a href="#" class="block py-2 text-gray-800">Our Products</a>
+            <a href="#" class="block py-2 text-gray-800">Science</a>
+            <a href="#" class="block py-2 text-gray-800">Contact Us</a>
+        </div>
+    </header>
+
     <!-- Focus Areas Sidebar -->
     <aside id="focusSidebar"
         class="fixed top-20 right-6 w-72 bg-white shadow-xl rounded-2xl p-6 z-30 transition-all duration-500 opacity-0 pointer-events-none"
         style="display:none">
-        <h3 class="text-2xl font-bold text-[#6461ab] mb-4"
-            style="font-family:'Cormorant Garamond',serif;">Focus Areas</h3>
+        <h3 class="text-2xl font-bold text-[#6461ab] mb-4" style="font-family:'Cormorant Garamond',serif;">Focus Areas
+        </h3>
         <ul class="space-y-3 text-lg">
             <li>Texture</li>
             <li>Hydration</li>
@@ -75,7 +129,7 @@
             SCAN</button>
     </section>
 
-    <section class="py-8" id="screen1">
+    <section class="py-8 mb-5" id="screen1">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 lg:gap-14">
             <div class="p-2 bg-[#F2E6F1] rounded-[20px] shadow-xl">
                 <div
@@ -118,7 +172,7 @@
     </section>
 
     <div id="termsPanel"
-        class="panel fixed top-0 right-0 h-full w-[420px] bg-white shadow-2xl p-8 translate-x-full z-50 mb-2 ">
+        class="panel fixed top-0 right-0 h-full w-[420px] bg-white shadow-2xl p-8 translate-x-full z-50 mb-2">
         <h2 class="text-[3.5rem] leading-tight text-[#6461ab] font-black mb-4"
             style="font-family:'Cormorant Garamond',serif;">Terms & Conditions</h2>
         <div class="text-sm space-y-4 h-[55%] overflow-auto">
@@ -139,6 +193,100 @@
         </button>
     </div>
 
+    <footer class="relative text-black bg-cover bg-center bg-no-repeat
+         bg-[url('./MobileFooterBg.webp')]
+         md:bg-[url('./DesktopFooterBg.webp')]">
+
+        <div class="max-w-7xl mx-auto md:px-12 px-3 py-8 md:py-12">
+
+            <!-- GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 items-start">
+
+                <!-- Quick Links -->
+                <div class="flex justify-center items-center gap-10 md:gap-14 flex-col md:flex-row">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-[18px] font-semibold mb-6">Quick Links</h3>
+                        <ul class="space-y-4 text-[16px] font-normal">
+                            <li><a href="#" class="hover:opacity-70 transition">Home</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Science</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Our Products -->
+                    <div class="text-center md:text-left">
+                        <h3 class="text-[18px] font-semibold mb-6">Our Products</h3>
+                        <ul class="space-y-4 text-[16px] font-normal">
+                            <li><a href="#" class="hover:opacity-70 transition">Rose Quartz Infused Face Mist</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Clear Quartz Infused Face Mist</a></li>
+                            <li><a href="#" class="hover:opacity-70 transition">Amethyst Quartz Infused Face Mist</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Center Logo -->
+                <div class="flex flex-col items-center text-center order-first md:order-none">
+
+                    <!-- SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="130" fill="none" viewBox="0 0 80 120"
+                        class="mb-8">
+                        <path fill="#000"
+                            d="M14.535 0a22.67 22.67 0 0 0 11.347 11.337 22.67 22.67 0 0 0-11.347 11.338A22.67 22.67 0 0 0 3.188 11.337 22.67 22.67 0 0 0 14.535 0" />
+                        <path fill="#000"
+                            d="M2.091 23.987C16.718 41.32 26.053 61.904 28.567 84.533c1.006 9.362 1.2 24.364-4.662 32.219-4.422 5.401-10.684 3.243-13.758-2.112-8.022-14.796-6.113-36.535-2.81-52.53 2.947-13.53 8.17-27.15 19.78-35.736 13.871-10.162 30.909-4.944 39.57 9.133 8.068 11.806 12.01 25.963 13.039 40.11.777 11.622-.069 23.416-2.903 34.719 0-3.026-.022-6.382-.08-9.419-.331-14.26-2.136-28.852-7.199-42.141-2.49-6.348-5.747-12.72-10.067-17.982-7.976-10.881-20.031-12.228-28.956-1.485-6.193 7.159-9.37 16.464-11.678 25.53-3.177 13.118-6.685 33.486-1.245 46.034l-.15-.263c.355.674.778 1.222.927 1.381.01.023.034.046.045.069 0 0-.011-.011-.023 0 0 .046-.102-.034-.182 0-.183-.046-.457.08-.492.091-.046.057 0 .012.023.035.034 0 .114-.08.194-.103.869-.731 1.314-1.564 1.909-2.729 1.657-3.528 2.525-7.741 3.05-11.703 1.566-12.718-.65-25.757-4.262-38.008C14.832 47.164 8.09 35.907 0 25.654z" />
+                    </svg>
+
+                    <!-- Made in Canada -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-xl">🍁</span>
+                        <p class="text-[20px] mt-3 font-medium">Made in Canada</p>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="text-center md:text-left">
+                    <h3 class="text-[18px] font-semibold mb-6">Contact Info</h3>
+
+                    <div class="space-y-5 text-[16px]">
+
+                        <a href="tel:+18007212636"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:opacity-70 transition">
+                            <img src="https://alpha.noveraskincare.com/icons/call-icon.svg" width="16">
+                            +1 800-721-2636
+                        </a>
+
+                        <a href="mailto:support@noveraskincare.com"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:opacity-70 transition">
+                            <img src="https://alpha.noveraskincare.com/icons/mail-icon.svg" width="18">
+                            support@noveraskincare.com
+                        </a>
+
+                        <div class="flex items-start justify-center md:justify-start gap-3">
+                            <img src="https://alpha.noveraskincare.com/images/svg/location-icon.svg" width="15">
+                            <span>2285 Dunwin Dr #12, Mississauga, ON L5L 3S3, Canada</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom -->
+            <div class="mt-14 md:mt-16 text-center text-[13px] opacity-70">
+                © 2026. All Rights Reserved. Design by Axlrdata
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
     <script>
         const termsPanel = document.getElementById("termsPanel");
         const overlay = document.getElementById("overlay");
@@ -165,6 +313,11 @@
                 focusSidebar.style.opacity = 1;
                 focusSidebar.style.pointerEvents = "auto";
             }, 50);
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById("mobileMenu");
+            mobileMenu.classList.toggle("hidden");
         }
 
         overlay.addEventListener("click", closePanel);
